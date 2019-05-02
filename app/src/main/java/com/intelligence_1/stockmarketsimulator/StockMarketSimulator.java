@@ -18,7 +18,7 @@ public class StockMarketSimulator {
 
         Market market = new Market();
         new MarketObserver(market);
-        market.start();
+        market.trade();
         market.printShit();
     }
 }

@@ -96,7 +96,7 @@ public class Investor {
      * Getter for the investor budget
      * @return investor budget
      */
-    public double getInvestorBudget() {
+    public Double getInvestorBudget() {
         return investorBudget;
     }
 
@@ -154,6 +154,10 @@ public class Investor {
 
     public int companiesInvestedNumber(){
         return shares.size();
+    }
+
+    public int pickACompany(int companiesSize){
+        return (int)(Math.random() * companiesSize);
     }
 
     /**

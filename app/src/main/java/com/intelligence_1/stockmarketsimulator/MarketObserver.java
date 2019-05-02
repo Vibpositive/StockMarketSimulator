@@ -20,12 +20,10 @@ public class MarketObserver implements MarketObserverInterface {
     @Override
     public void update(List<Company> companies, Stack<Company> companyStack) {
         // TC WC=O(n.m)
-        synchronized (companies) {
-            if (!companies.isEmpty()) {
-                for (Company c : companies) {
-                    if (!companyStack.contains(c)) {
-                        c.dropSharePrice();
-                    }
+        if (!companies.isEmpty()) {
+            for (Company c : companies) {
+                if (!companyStack.contains(c)) {
+                    c.dropSharePrice();
                 }
             }
         }

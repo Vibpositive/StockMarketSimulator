@@ -69,7 +69,7 @@ public class Company implements Subject<CompanyObserverInterface> {
      * The price of the shares goes down by 2%
      */
     public void dropSharePrice() {
-        this.sharePrice = 0.98*this.sharePrice;
+        this.sharePrice = 0.991*this.sharePrice;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Company implements Subject<CompanyObserverInterface> {
      * Getter for the shares price
      * @return shares price
      */
-    public double getSharePrice() {
+    public Double getSharePrice() {
         return sharePrice;
     }
 

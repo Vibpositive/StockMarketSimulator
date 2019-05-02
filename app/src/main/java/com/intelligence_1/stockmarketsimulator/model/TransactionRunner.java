@@ -1,30 +1,28 @@
 package com.intelligence_1.stockmarketsimulator.model;
 
-import android.app.PendingIntent;
 import com.intelligence_1.stockmarketsimulator.model.companies.Company;
 import com.intelligence_1.stockmarketsimulator.model.investors.Investor;
 
-public class Transaction {
-    private static Transaction instance;
+public class TransactionRunner {
+    private static TransactionRunner instance;
 
-    private Transaction(){}
+    private TransactionRunner(){}
 
-    public static synchronized Transaction getInstance(){
+    public static TransactionRunner getInstance(){
         if(instance == null){
-            instance = new Transaction();
+            instance = new TransactionRunner();
         }
         return instance;
     }
 
-    public void doTransaction(Investor investor, Company company) throws InterruptedException{
+    public void doTransaction(Investor investor, Company company) throws Exception{
         if(investor.getInvestorBudget() >= company.getSharePrice() && company.canSellShare()){
-//        if(investor.getInvestorBudget() >= company.getSharePrice()){
             investor.buyShare(company.getCompanyID(), company.getSharePrice());
             company.soldAShare();
         }else if(investor.getInvestorBudget() < company.getSharePrice()){
-            throw new InterruptedException("Investor: " + investor.getInvestorName() + " does not have enough funds!");
+            throw new Exception("Investor: " + investor.getInvestorName() + " does not have enough funds!");
         }else if(!company.canSellShare()){
-            throw new InterruptedException("Company does not have shares to sell");
+            throw new Exception("Company does not have shares to sell");
         }
     }
 
