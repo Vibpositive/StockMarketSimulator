@@ -1,7 +1,6 @@
 package com.intelligence_1.stockmarketsimulator;
 
 import com.intelligence_1.stockmarketsimulator.model.SetUpData;
-import com.intelligence_1.stockmarketsimulator.model.Transaction;
 import com.intelligence_1.stockmarketsimulator.model.companies.Company;
 import com.intelligence_1.stockmarketsimulator.model.investors.Investor;
 import com.intelligence_1.stockmarketsimulator.model.utilities.CompanyObserver;
@@ -18,7 +17,7 @@ public class Market implements Subject<MarketObserverInterface> {
 
     private Stack<Company> companiesStack;
 
-    private List<Company> companies = SetUpData.SetUpCompanies(1);
+    private List<Company> companies = SetUpData.SetUpCompanies(100);
     private List<Company> inactiveCompanies;
     private List<Investor> investors = SetUpData.SetUpInvestors(100);
     private MarketObserverInterface observer;
@@ -36,10 +35,47 @@ public class Market implements Subject<MarketObserverInterface> {
     }
 
     public void start(){
-//        while(threadCounter < 4 && (i < 11)){
-//        while(threadCounter < 2 && companies.size() > 0){
-//        while(companies.size() > 0){
-            try {
+//        System.out.println("Market.start()");
+        /*synchronized (companies){
+            if(companies.isEmpty()) {
+                System.out.println("Market.stop");
+                return;
+            }
+        }*/
+//        for (Investor investor : investors){
+        for (int c = 0; c < 10; c++){
+            try{
+                synchronized (companies){
+                    if(!companies.isEmpty()){
+                        int randomCompanyIndex = (int)(Math.random() * companies.size());
+                        Company randomCompany = companies.get(randomCompanyIndex);
+
+                        int randomInvestorIndex = (int)(Math.random() * investors.size());
+                        Investor investor = investors.get(randomInvestorIndex);
+
+                        TransactionManager thread = new TransactionManager(
+                                "Transaction 1: " + i, investor, randomCompany, this
+                        );
+                        thread.start();
+                        try {
+                            thread.join();
+                        } catch ( Exception e) {
+                            System.out.println("Interrupted1: " + e.getMessage());
+                        }
+                    }
+                }
+
+            }catch (Exception e){
+                System.out.println("Interrupted2: ");
+                System.out.println(e.getStackTrace()[0]);
+                System.out.println(e.getStackTrace()[1]);
+                System.out.println(e.getStackTrace()[2]);
+                System.out.println(e.getStackTrace()[3]);
+                System.out.println(e.getStackTrace()[4]);
+                System.out.println(e.getStackTrace().length);
+            }
+        }
+            /*try {
                 int randomInvestorIndex1 = (int)(Math.random() * investors.size());
                 Investor randomInvestor1 = investors.get(randomInvestorIndex1);
 
@@ -50,10 +86,10 @@ public class Market implements Subject<MarketObserverInterface> {
                 try {
                     thread1.join();
                 } catch ( Exception e) {
-                    System.out.println("Interrupted");
+                    System.out.println("Interrupted: " + e.getStackTrace());
                 }
             }catch (Exception e){
-                System.out.println("Interrupted");
+                System.out.println("Interrupted: " + e.getStackTrace());
             }
             try {
                 int randomInvestorIndex2 = (int)(Math.random() * investors.size());
@@ -66,10 +102,10 @@ public class Market implements Subject<MarketObserverInterface> {
                 try {
                     thread2.join();
                 } catch ( Exception e) {
-                    System.out.println("Interrupted");
+                    System.out.println("Interrupted: " + e.getStackTrace());
                 }
             }catch (Exception e){
-                System.out.println("Interrupted");
+                System.out.println("Interrupted: " + e.getStackTrace());
             }
             try {
                 int randomInvestorIndex3 = (int)(Math.random() * investors.size());
@@ -82,10 +118,10 @@ public class Market implements Subject<MarketObserverInterface> {
                 try {
                     thread3.join();
                 } catch ( Exception e) {
-                    System.out.println("Interrupted");
+                    System.out.println("Interrupted: " + e.getStackTrace());
                 }
             }catch (Exception e){
-                System.out.println("Interrupted");
+                System.out.println("Interrupted: " + e.getStackTrace());
             }
             try {
                 int randomInvestorIndex4 = (int)(Math.random() * investors.size());
@@ -98,48 +134,57 @@ public class Market implements Subject<MarketObserverInterface> {
                 try {
                     thread4.join();
                 } catch ( Exception e) {
-                    System.out.println("Interrupted");
+                    System.out.println("Interrupted: " + e.getStackTrace());
                 }
             }catch (Exception e){
-                System.out.println("Interrupted");
-            }
+                System.out.println("Interrupted: " + e.getStackTrace());
+            }*/
 
 //            }
-            System.out.println("companies.size(): " + companies.size());
+//            System.out.println("companies.size(): " + companies.size());
+//            System.out.println("companies: " + companies);
             i++;
-//        }
-
     }
 
-    public void updateCompaniesList() {
+    public void updateCompaniesList(Company company) {
+            synchronized (companies){
+                if(!companies.isEmpty()){
+                    this.companies.remove(company);
+                    this.addInactiveCompany(company);
+                    System.out.println("updateCompaniesList");
+                    System.out.println("companies.size: " + companies.size());
+                }else{
+                    System.out.println("It wont create any threads");
+                }
 
-
-        for (Company c : companies) {
-//            if(!c.canSellShare()){
-            this.addInactiveCompany(c);
-            this.getCompanies().remove(c);
-            System.out.println("updateCompaniesList");
-            System.out.println("incompanies.size: " + companies.size());
-            System.out.println("companies.size: " + inactiveCompanies.size());
-//            }
-        }
-
+//                System.out.println("companies.size: " + inactiveCompanies.size());
+            }
     }
 
     public void printShit(){
-        while (Thread.activeCount() > 2) {
-//            System.out.println(Thread.activeCount());
-        }
-        System.out.println(Thread.getAllStackTraces().keySet());
-        System.out.println("Print investor");
-        System.out.println(Thread.activeCount());
+//        while (Thread.activeCount() > 2) {
+//        }
 
-        for (Investor i : investors) {
-            if(i.getInvestorNumberOfBoughtShares() > 0){
-                System.out.println(i.getInvestorName() + "\n\tBudget " + i.getInvestorBudget() + "\n\tshares: " + i.getInvestorNumberOfBoughtShares());
+//        System.out.println(Thread.getAllStackTraces().keySet());
+//        System.out.println("Print investor");
+//        System.out.println(Thread.activeCount());
+        synchronized (companies){
+//            if(companies.isEmpty()){
+                for (Investor i : investors) {
+                    if(i.getInvestorNumberOfBoughtShares() > 0){
+                        System.out.println(i.getInvestorName() + "\n\tBudget " + i.getInvestorBudget() + "\n\tshares: " + i.getInvestorNumberOfBoughtShares());
+                    }
+                }
+
+                for (Company c : inactiveCompanies) {
+//            if(i.getInvestorNumberOfBoughtShares() > 0){
+                    System.out.println(c);
+//            }
+//                }
+//        System.out.println("Comp " + companies);
             }
         }
-        System.out.println("COmpanies size: " + companies.size());
+
     }
 
     public void decreaseThreadCounter(Market market){

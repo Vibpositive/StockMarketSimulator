@@ -38,8 +38,8 @@ public class SetUpData {
             String name = faker.company.name();
 
             // info for shares
-//            int numberOfShares = (int) (Math.random() * 1000 + 100);
-            int numberOfShares = 1;
+            int numberOfShares = (int) (Math.random() * 1000 + 100);
+//            int numberOfShares = 1;
             double price = (double) (Math.random() * 100 + 10);
 
             // Add the company name and shares to the List

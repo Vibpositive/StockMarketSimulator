@@ -16,7 +16,7 @@ public class CompanyObserver implements CompanyObserverInterface {
     }
 
     @Override
-    public void updateCompaniesList() {
-        market.updateCompaniesList();
+    public void updateCompaniesList(Company company) {
+        market.updateCompaniesList(company);
     }
 }

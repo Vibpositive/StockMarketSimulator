@@ -32,7 +32,9 @@ public class TransactionManager extends Thread{
         }catch (InterruptedException e){
 //            System.out.println("Thread: " + threadName + " stopped");
         }finally {
-            program.start();
+            if(Thread.activeCount() <= 4){
+                program.start();
+            }
         }
 
 //        program.decreaseThreadCounter(program);

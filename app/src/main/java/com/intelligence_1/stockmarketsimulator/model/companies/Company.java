@@ -158,7 +158,7 @@ public class Company implements Subject<CompanyObserverInterface> {
 
     @Override
     public void notifyObservers() {
-        this.companyObserver.updateCompaniesList();
+        this.companyObserver.updateCompaniesList(this);
     }
 
     @Override
